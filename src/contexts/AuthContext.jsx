@@ -1,12 +1,21 @@
 import { useState } from 'react';
 import { createContext } from 'react';
 import axios from '../config/axios';
-import { addAccessToken } from '../utils/local-storage';
+import { addAccessToken, getAccessToken } from '../utils/local-storage';
+import { useEffect } from 'react';
 
 export const AuthContext = createContext();
 
 export default function AuthContextProvider({ children }) {
-  const [authUser, setAuthUser] = useState({});
+  const [authUser, setAuthUser] = useState(null);
+
+  useEffect(() => {
+    if (getAccessToken()) {
+      axios.get('/auth/me').then(res => {
+        setAuthUser(res.data.user);
+      });
+    }
+  }, []);
 
   const login = async credential => {
     try {
@@ -19,7 +28,7 @@ export default function AuthContextProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ login: login }}>
+    <AuthContext.Provider value={{ login, authUser }}>
       {children}
     </AuthContext.Provider>
   );
