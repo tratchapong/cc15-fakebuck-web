@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import LoginButton from './LoginButton';
 import LoginInput from './LoginInput';
+import { useAuth } from '../../hooks/use-auth';
 
 export default function LoginForm() {
   const [input, setInput] = useState({
@@ -8,8 +9,15 @@ export default function LoginForm() {
     password: ''
   });
 
+  const { login } = useAuth();
+
+  const handleSubmitForm = e => {
+    e.preventDefault();
+    login(input);
+  };
+
   return (
-    <form className="grid gap-4">
+    <form className="grid gap-4" onSubmit={handleSubmitForm}>
       <LoginInput
         placeholder="Email address or phone number"
         value={input.emailOrMobile}
