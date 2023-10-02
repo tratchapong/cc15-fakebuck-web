@@ -8,12 +8,20 @@ export const AuthContext = createContext();
 
 export default function AuthContextProvider({ children }) {
   const [authUser, setAuthUser] = useState(null);
+  const [initialLoading, setInitialLoading] = useState(true);
 
   useEffect(() => {
     if (getAccessToken()) {
-      axios.get('/auth/me').then(res => {
-        setAuthUser(res.data.user);
-      });
+      axios
+        .get('/auth/me')
+        .then(res => {
+          setAuthUser(res.data.user);
+        })
+        .finally(() => {
+          setInitialLoading(false);
+        });
+    } else {
+      setInitialLoading(false);
     }
   }, []);
 
@@ -28,7 +36,7 @@ export default function AuthContextProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ login, authUser }}>
+    <AuthContext.Provider value={{ login, authUser, initialLoading }}>
       {children}
     </AuthContext.Provider>
   );
