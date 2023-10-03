@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import { createContext } from 'react';
 import axios from '../config/axios';
-import { addAccessToken, getAccessToken } from '../utils/local-storage';
+import {
+  addAccessToken,
+  getAccessToken,
+  removeAccessToken
+} from '../utils/local-storage';
 import { useEffect } from 'react';
 
 export const AuthContext = createContext();
@@ -37,8 +41,15 @@ export default function AuthContextProvider({ children }) {
     setAuthUser(res.data.user);
   };
 
+  const logout = () => {
+    removeAccessToken();
+    setAuthUser(null);
+  };
+
   return (
-    <AuthContext.Provider value={{ login, authUser, initialLoading, register }}>
+    <AuthContext.Provider
+      value={{ login, authUser, initialLoading, register, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
