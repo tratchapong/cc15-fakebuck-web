@@ -2,20 +2,44 @@ import Avatar from '../../components/Avatar';
 import CoverImage from './CoverImage';
 import PictureForm from './PictureForm';
 import { useAuth } from '../../hooks/use-auth';
+import { useState } from 'react';
+import Loading from '../../components/Loading';
 
-export default function EditProfileForm() {
-  const { authUser } = useAuth();
+export default function EditProfileForm({ onSuccess }) {
+  const [loading, setLoading] = useState(false);
+  const { authUser, updateProfile } = useAuth();
 
-  const uploadProfileImage = input => {
-    console.log(input);
+  const uploadProfileImage = async input => {
+    try {
+      const formData = new FormData();
+      formData.append('profileImage', input);
+      setLoading(true);
+      await updateProfile(formData);
+      onSuccess();
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const uploadCoverImage = input => {
-    console.log(input);
+  const uploadCoverImage = async input => {
+    try {
+      const formData = new FormData();
+      formData.append('coverImage', input);
+      setLoading(true);
+      await updateProfile(formData);
+      onSuccess();
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="flex flex-col gap-4">
+      {loading && <Loading />}
       <PictureForm
         title="Profile picture"
         initialSrc={authUser.profileImage}
