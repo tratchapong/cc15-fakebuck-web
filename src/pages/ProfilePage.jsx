@@ -8,6 +8,7 @@ import { useAuth } from '../hooks/use-auth';
 export default function ProfilePage() {
   const [profileUser, setProfileUser] = useState({});
   const [statusWithAuthUser, setStatusWithAuthUser] = useState('');
+  const [profileFriends, setProfileFriends] = useState([]);
   const { profileId } = useParams();
 
   const { authUser } = useAuth();
@@ -19,6 +20,7 @@ export default function ProfilePage() {
       .then(res => {
         setProfileUser(res.data.user);
         setStatusWithAuthUser(res.data.status);
+        setProfileFriends(res.data.friends);
       })
       .catch(err => {
         console.log(err);
@@ -38,6 +40,7 @@ export default function ProfilePage() {
             profileUser={isAuthUser ? authUser : profileUser}
             statusWithAuthUser={statusWithAuthUser}
             setStatusWithAuthUser={setStatusWithAuthUser}
+            profileFriends={profileFriends}
           />
         </>
       ) : (
