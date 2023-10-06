@@ -33,7 +33,7 @@ export default function CreatePostButton() {
         maxWidth={32}
         onClose={() => setIsOpen(false)}
       >
-        <PostForm />
+        <PostForm onSuccess={() => setIsOpen(false)} />
       </Modal>
     </div>
   );
