@@ -13,6 +13,15 @@ export default function HomePage() {
     setAllPost([newPost, ...allPost]);
   };
 
+  const deletePost = async postId => {
+    try {
+      await axios.delete(`/post/${postId}`);
+      setAllPost(allPost.filter(el => el.id !== postId));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     axios
       .get('/post/friend')
@@ -27,7 +36,7 @@ export default function HomePage() {
   return (
     <div className="max-w-[44rem] mx-auto px-8 py-6 flex flex-col gap-4">
       <CreatePostButton createPost={createPost} />
-      <PostList allPost={allPost} />
+      <PostList allPost={allPost} deletePost={deletePost} />
     </div>
   );
 }
